@@ -28,9 +28,9 @@
 
     <div class="container mx-auto px-4 py-8">
         <div class="max-w-md mx-auto">
-            <!-- View Mode -->
+            
             <div id="viewMode" class="bg-white rounded-2xl shadow-lg overflow-hidden">
-                <!-- Profile Header -->
+                
                 <div class="bg-white p-6 text-center border-b">
                     <div class="relative w-20 h-20 mx-auto mb-3">
                         @if($user->profile_picture)
@@ -52,7 +52,7 @@
                     </button>
                 </div>
 
-                <!-- Profile Details -->
+                
                 <div class="p-6 space-y-4">
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-1">Nama</label>
@@ -75,10 +75,10 @@
                     </div>
                 </div>
 
-                <!-- Action Buttons -->
+                
                 <div class="p-6 pt-2 space-y-3">
                     @if($user->usertype === 'admin')
-                        <!-- Admin Dashboard Button -->
+                        
                         <button onclick="window.location.href='{{ route('admin.dashboard') }}'" class="w-full bg-red-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-red-700 transition flex items-center justify-center space-x-2">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
@@ -87,7 +87,7 @@
                         </button>
                     @endif
 
-                    <!-- My Donations Button -->
+                    
                     <button onclick="window.location.href='{{ route('donation.myDonations') }}'" class="w-full bg-green-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-green-700 transition flex items-center justify-center space-x-2">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
@@ -114,7 +114,7 @@
                 </div>
             </div>
 
-            <!-- Edit Mode -->
+            
             <div id="editMode" class="bg-white rounded-2xl shadow-lg overflow-hidden hidden">
                 <h2 class="text-2xl font-bold text-center text-gray-800 py-6 border-b">Profile</h2>
 
@@ -137,7 +137,7 @@
                 <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="p-6 space-y-4">
-                        <!-- Profile Picture Upload -->
+                        
                         <div class="flex flex-col items-center mb-4">
                             <div class="relative">
                                 <div id="imagePreview" class="w-24 h-24 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
@@ -230,7 +230,7 @@
         </div>
     </div>
 
-    <!-- Delete Confirmation Modal -->
+    
     <div id="deleteModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
         <div class="bg-white rounded-2xl p-6 max-w-sm mx-4 shadow-xl">
             <div class="text-center mb-4">
@@ -295,7 +295,6 @@
             document.getElementById('deleteModal').classList.add('hidden');
         }
 
-        // Close modal when clicking outside
         document.getElementById('deleteModal').addEventListener('click', function(e) {
             if (e.target === this) {
                 hideDeleteModal();

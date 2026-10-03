@@ -110,9 +110,6 @@
         const btnText = document.getElementById('btnText');
         const btnLoading = document.getElementById('btnLoading');
 
-        // --- Drag and Drop Logic ---
-
-        // Prevent default browser behaviors for drag events
         ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
             photoUploadArea.addEventListener(eventName, preventDefaults, false);
         });
@@ -122,12 +119,10 @@
             e.stopPropagation();
         }
 
-        // Highlight drop area when item is dragged over it
         ['dragenter', 'dragover'].forEach(eventName => {
             photoUploadArea.addEventListener(eventName, highlight, false);
         });
 
-        // Remove highlight when item leaves or is dropped
         ['dragleave', 'drop'].forEach(eventName => {
             photoUploadArea.addEventListener(eventName, unhighlight, false);
         });
@@ -142,7 +137,6 @@
             photoUploadArea.classList.add('border-gray-300');
         }
 
-        // Handle the dropped file
         photoUploadArea.addEventListener('drop', handleDrop, false);
 
         function handleDrop(e) {
@@ -150,32 +144,24 @@
             const files = dt.files;
             
             if (files.length > 0) {
-                // Assign dropped files to the input element
                 photoInput.files = files;
                 handleFiles(files[0]);
             }
         }
 
-        // --- Click Logic ---
-
-        // Trigger file input when clicking the area (unless clicking delete button)
         photoUploadArea.addEventListener('click', (e) => {
-            // Check if click was NOT on the delete button
             if (!e.target.closest('button') && photoPlaceholder.classList.contains('hidden') === false) {
                 photoInput.click();
             }
         });
 
-        // Handle file selection via Click
         photoInput.addEventListener('change', (e) => {
             if (e.target.files.length > 0) {
                 handleFiles(e.target.files[0]);
             }
         });
 
-        // Common function to process and preview the file
         function handleFiles(file) {
-            // Validate image type
             if (!file.type.startsWith('image/')) {
                 alert('Mohon upload file gambar saja (JPG/PNG).');
                 return;
@@ -191,9 +177,7 @@
         }
 
         function removePhoto(e) {
-            // Stop event bubbling so it doesn't trigger the area click
             if (e) e.stopPropagation();
-            
             photoInput.value = '';
             photoPreview.classList.add('hidden');
             photoPlaceholder.classList.remove('hidden');

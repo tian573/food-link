@@ -28,7 +28,6 @@
 
     <div class="container mx-auto px-4 py-16 max-w-2xl">
         <div class="bg-white rounded-2xl shadow-lg p-12 text-center">
-            <!-- Success Icon -->
             <div class="mb-6 flex justify-center">
                 <div class="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center">
                     <svg class="w-12 h-12 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">

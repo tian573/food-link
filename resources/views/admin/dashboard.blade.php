@@ -27,7 +27,7 @@
     </header>
 
     <div class="container mx-auto px-4 py-8 max-w-7xl">
-        <!-- Tab Navigation -->
+        
         <div class="mb-6 flex space-x-2 border-b border-gray-200">
             <button onclick="switchTab('donations')" id="tab-donations" class="tab-button active px-6 py-3 font-semibold border-b-2 border-green-600 text-green-600">
                 Donations ({{ $donations->count() }})
@@ -37,12 +37,12 @@
             </button>
         </div>
 
-        <!-- Donations Tab -->
+        
         <div id="content-donations" class="tab-content">
             <div class="bg-white rounded-2xl shadow-lg p-6 mb-6">
                 <h2 class="text-2xl font-bold text-gray-900 mb-4">All Donations</h2>
                 
-                <!-- Status Filter -->
+                
                 <div class="flex space-x-2 mb-4">
                     <button onclick="filterDonations('all')" class="filter-btn active px-4 py-2 rounded-lg bg-green-600 text-white font-semibold">
                         All ({{ $donations->count() }})
@@ -73,7 +73,7 @@
                         @foreach($donations as $donation)
                         <div class="donation-item border border-gray-200 rounded-xl overflow-hidden hover:shadow-md transition" data-status="{{ $donation->status }}">
                             <div class="md:flex">
-                                <!-- Food Image -->
+                                
                                 <div class="md:w-48 h-48 md:h-auto bg-gradient-to-br from-green-100 to-green-200 flex items-center justify-center flex-shrink-0">
                                     @if($donation->food_photo)
                                         <img src="{{ asset('storage/' . $donation->food_photo) }}" 
@@ -87,7 +87,7 @@
                                     @endif
                                 </div>
 
-                                <!-- Donation Details -->
+                                
                                 <div class="flex-1 p-6">
                                     <div class="flex items-start justify-between mb-4">
                                         <div>
@@ -128,7 +128,7 @@
                                         </div>
                                     </div>
 
-                                    <!-- Collapsible Details -->
+                                    
                                     <div id="donation-{{ $donation->id }}" class="hidden mt-6 pt-6 border-t border-gray-200">
                                         <div class="grid md:grid-cols-2 gap-6 mb-6">
                                             <div class="space-y-3">
@@ -182,7 +182,7 @@
                                             </div>
                                         </div>
 
-                                        <!-- Admin Actions -->
+                                        
                                         <div class="pt-4 border-t border-gray-200">
                                             <p class="text-sm text-gray-500 mb-3">
                                                 Dibuat: {{ $donation->created_at->format('d M Y, H:i') }}
@@ -252,7 +252,7 @@
             </div>
         </div>
 
-        <!-- Users Tab -->
+        
         <div id="content-users" class="tab-content hidden">
             <div class="bg-white rounded-2xl shadow-lg p-6">
                 <h2 class="text-2xl font-bold text-gray-900 mb-6">All Users</h2>
@@ -327,21 +327,17 @@
 
     <script>
         function switchTab(tab) {
-            // Hide all tab contents
             document.querySelectorAll('.tab-content').forEach(content => {
                 content.classList.add('hidden');
             });
             
-            // Remove active class from all tab buttons
             document.querySelectorAll('.tab-button').forEach(button => {
                 button.classList.remove('active', 'border-green-600', 'text-green-600');
                 button.classList.add('border-transparent', 'text-gray-600');
             });
             
-            // Show selected tab content
             document.getElementById('content-' + tab).classList.remove('hidden');
             
-            // Add active class to selected tab button
             const activeButton = document.getElementById('tab-' + tab);
             activeButton.classList.add('active', 'border-green-600', 'text-green-600');
             activeButton.classList.remove('border-transparent', 'text-gray-600');
@@ -356,7 +352,6 @@
             const donations = document.querySelectorAll('.donation-item');
             const filterButtons = document.querySelectorAll('.filter-btn');
             
-            // Update button styles
             filterButtons.forEach(btn => {
                 btn.classList.remove('bg-green-600', 'text-white');
                 btn.classList.add('bg-gray-200', 'text-gray-700');
@@ -364,7 +359,6 @@
             event.target.classList.remove('bg-gray-200', 'text-gray-700');
             event.target.classList.add('bg-green-600', 'text-white');
             
-            // Filter donations
             donations.forEach(donation => {
                 if (status === 'all' || donation.dataset.status === status) {
                     donation.style.display = 'block';

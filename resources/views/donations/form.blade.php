@@ -30,7 +30,6 @@
         <div class="bg-white rounded-2xl shadow-lg p-8">
             <h1 class="text-3xl font-bold text-gray-900 mb-6 text-center">Donasi Makanan</h1>
             
-            <!-- Food Image Placeholder -->
             <div class="mb-6 flex justify-center">
                 @if($tempPhotoPath)
                     <img src="{{ asset('storage/' . $tempPhotoPath) }}" alt="Food" class="w-48 h-48 object-cover rounded-xl shadow-md">
@@ -48,7 +47,6 @@
                 <input type="hidden" name="food_photo" value="{{ $tempPhotoPath }}">
                 <input type="hidden" name="food_type" value="{{ $aiAnalysis ? 'Analisis AI' : 'Upload Foto' }}">
 
-                <!-- Informasi Makanan Section -->
                 <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center">
                     @if($aiAnalysis)
                         <span class="bg-green-100 text-green-700 text-xs px-2 py-1 rounded mr-2">✓ AI Analisis</span>
@@ -59,7 +57,6 @@
                 </h2>
                 
                 <div class="space-y-4 mb-6">
-                    <!-- Nama Makanan -->
                     <div>
                         <label class="block text-gray-700 font-semibold mb-2">Nama Makanan</label>
                         @php
@@ -77,7 +74,6 @@
                         @endif
                     </div>
 
-                    <!-- Tanggal Expired -->
                     <div>
                         <label class="block text-gray-700 font-semibold mb-2">Tanggal Expired</label>
                         <input type="date" name="expiry_date" value="{{ old('expiry_date') }}"
@@ -86,7 +82,6 @@
                                required>
                     </div>
 
-                    <!-- Estimasi Berat & Nilai Gizi (2 columns) -->
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="block text-gray-700 font-semibold mb-2">Estimasi Berat</label>
@@ -134,7 +129,6 @@
                         </div>
                     </div>
 
-                    <!-- Prediksi Expired & Kondisi (2 columns) -->
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="block text-gray-700 font-semibold mb-2">Prediksi Shelf Life</label>
@@ -184,7 +178,6 @@
                         </div>
                     </div>
 
-                    <!-- Potential Allergens -->
                     @if(isset($aiAnalysis['potentialAllergens']) && is_array($aiAnalysis['potentialAllergens']) && !empty($aiAnalysis['potentialAllergens']))
                     <div class="bg-orange-50 border border-orange-200 rounded-lg p-3">
                         <p class="text-sm font-semibold text-orange-800 mb-2">⚠️ Potensi Alergen:</p>
@@ -197,7 +190,6 @@
                     @endif
                 </div>
 
-                <!-- Lokasi Donasi Section -->
                 <h2 class="text-xl font-bold text-gray-900 mb-4">Lokasi Donasi</h2>
                 <div class="space-y-4 mb-6">
                     <div>
@@ -228,7 +220,6 @@
                     </div>
                 </div>
 
-                <!-- Waktu Pengantaran Section -->
                 <h2 class="text-xl font-bold text-gray-900 mb-4">Waktu Pengantaran</h2>
                 <div class="space-y-4 mb-6">
                     <div class="grid grid-cols-2 gap-4">
@@ -250,7 +241,6 @@
                     </div>
                 </div>
 
-                <!-- Kontak Section -->
                 <h2 class="text-xl font-bold text-gray-900 mb-4">Kontak</h2>
                 <div class="mb-6">
                     <label class="block text-gray-700 font-semibold mb-2">Nomor Telepon</label>
@@ -260,7 +250,6 @@
                            placeholder="08123456789" required>
                 </div>
 
-                <!-- Submit Buttons -->
                 <div class="grid grid-cols-2 gap-4">
                     <a href="/map" 
                        class="bg-gray-200 text-gray-800 px-6 py-4 rounded-lg font-semibold text-center hover:bg-gray-300 transition">
@@ -309,7 +298,7 @@
         const locationStatus = document.getElementById('locationStatus');
 
         function calculateDistance(lat1, lon1, lat2, lon2) {
-            const R = 6371; // Earth's radius in km
+            const R = 6371;
             const dLat = (lat2 - lat1) * Math.PI / 180;
             const dLon = (lon2 - lon1) * Math.PI / 180;
             const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
@@ -328,7 +317,6 @@
                 return {...fb, distance};
             });
 
-            // Sort by distance if available
             if (userLat && userLng) {
                 banksWithDistance.sort((a, b) => a.distance - b.distance);
                 locationStatus.textContent = '(diurutkan berdasarkan jarak terdekat)';
@@ -338,7 +326,6 @@
                 locationStatus.classList.add('text-gray-500');
             }
 
-            // Clear and populate select
             foodbankSelect.innerHTML = '<option value="">Pilih Food Bank</option>';
             
             banksWithDistance.forEach((fb, index) => {
@@ -349,7 +336,6 @@
                 option.value = `${fb.name}${distanceText}`;
                 option.textContent = `${fb.name}${distanceText}${closestBadge}`;
                 
-                // Select the previously selected foodbank or the one from query
                 if (selectedFoodbank && selectedFoodbank === fb.id.toString()) {
                     option.selected = true;
                 }
@@ -358,7 +344,6 @@
             });
         }
 
-        // Try to get user location
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 (position) => {
@@ -366,11 +351,11 @@
                 },
                 (error) => {
                     console.error('Location error:', error);
-                    populateFoodBanks(); // Populate without distance
+                    populateFoodBanks();
                 }
             );
         } else {
-            populateFoodBanks(); // Populate without distance
+            populateFoodBanks();
         }
     </script>
 </body>

@@ -27,14 +27,11 @@ class ProfileController extends Controller
             'profile_picture' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
         ]);
         
-        // Handle profile picture upload
         if ($request->hasFile('profile_picture')) {
-            // Delete old profile picture if exists
             if ($user->profile_picture) {
                 Storage::disk('public')->delete($user->profile_picture);
             }
             
-            // Store new profile picture
             $path = $request->file('profile_picture')->store('profile_pictures', 'public');
             $user->profile_picture = $path;
         }
@@ -59,18 +56,14 @@ class ProfileController extends Controller
     {
         $user = Auth::user();
         
-        // Delete profile picture if exists
         if ($user->profile_picture) {
             Storage::disk('public')->delete($user->profile_picture);
         }
         
-        // Delete user account first
         $user->delete();
         
-        // Logout user using the guard's logout method
         Auth::guard('web')->logout();
         
-        // Invalidate and regenerate session
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         

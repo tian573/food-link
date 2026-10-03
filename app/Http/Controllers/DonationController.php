@@ -11,13 +11,11 @@ use Illuminate\Support\Facades\Log;
 
 class DonationController extends Controller
 {
-    // Show upload photo page
     public function showUpload()
     {
         return view('donations.upload');
     }
     
-    // Handle photo upload and AI analysis
     public function analyzePhoto(Request $request)
     {
         $request->validate([
@@ -26,13 +24,11 @@ class DonationController extends Controller
             'estimated_weight' => 'required|numeric|min:0.1',
         ]);
         
-        // Save photo temporarily
         $photo = $request->file('food_photo');
         $photoPath = $photo->store('temp_donations', 'public');
         $fullPath = storage_path('app/public/' . $photoPath);
         
         try {
-            // Call Flask API for AI analysis
             $response = Http::timeout(30)
                 ->attach('file', file_get_contents($fullPath), $photo->getClientOriginalName())
                 ->post('http://localhost:5000/analyze', [
@@ -43,10 +39,6 @@ class DonationController extends Controller
             if ($response->successful() && !isset($response->json()['error'])) {
                 $aiResult = $response->json();
                 
-                // 🔍 DEBUG: Log the AI response to see what we're getting
-                Log::info('AI Analysis Response:', $aiResult);
-                
-                // Store AI result in session
                 session([
                     'ai_analysis' => $aiResult,
                     'temp_photo_path' => $photoPath,
@@ -60,7 +52,6 @@ class DonationController extends Controller
                 $errorMsg = $response->json()['error'] ?? 'AI analysis failed';
                 Log::error('AI Analysis Failed:', ['error' => $errorMsg, 'response' => $response->body()]);
                 
-                // If AI fails, still allow manual input
                 session([
                     'temp_photo_path' => $photoPath,
                     'food_name' => $request->food_name,
@@ -74,7 +65,6 @@ class DonationController extends Controller
         } catch (\Exception $e) {
             Log::error('Flask API Exception:', ['message' => $e->getMessage()]);
             
-            // If Flask server is not running
             session([
                 'temp_photo_path' => $photoPath,
                 'food_name' => $request->food_name,
@@ -87,7 +77,6 @@ class DonationController extends Controller
         }
     }
     
-    // Show donation form
     public function showForm(Request $request)
     {
         $aiAnalysis = session('ai_analysis');
@@ -95,13 +84,6 @@ class DonationController extends Controller
         $foodName = session('food_name');
         $estimatedWeight = session('estimated_weight');
         $selectedFoodbank = $request->query('foodbank');
-        
-        // 🔍 DEBUG: Log what's in the session
-        Log::info('Form Data:', [
-            'aiAnalysis' => $aiAnalysis,
-            'foodName' => $foodName,
-            'estimatedWeight' => $estimatedWeight
-        ]);
         
         return view('donations.form', compact(
             'aiAnalysis',
@@ -112,7 +94,6 @@ class DonationController extends Controller
         ));
     }
     
-    // Store donation
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -133,34 +114,28 @@ class DonationController extends Controller
             'contact_number' => 'required|string',
         ]);
         
-        // Move temp photo to permanent location
         if ($request->food_photo && Storage::disk('public')->exists($request->food_photo)) {
             $newPath = str_replace('temp_donations/', 'donations/', $request->food_photo);
             Storage::disk('public')->move($request->food_photo, $newPath);
             $validated['food_photo'] = $newPath;
         }
         
-        // Add user_id and AI analysis
         $validated['user_id'] = Auth::id();
         $validated['ai_analysis'] = session('ai_analysis') ? json_encode(session('ai_analysis')) : null;
         
-        // Create donation
         Donation::create($validated);
         
-        // Clear session
         session()->forget(['ai_analysis', 'temp_photo_path', 'food_name', 'estimated_weight']);
         
         return redirect()->route('donation.success')
             ->with('success', 'Donasi berhasil didaftarkan!');
     }
     
-    // Show success page
     public function success()
     {
         return view('donations.success');
     }
     
-    // Show user's donations
     public function myDonations()
     {
         $donations = Donation::where('user_id', Auth::id())
@@ -170,15 +145,12 @@ class DonationController extends Controller
         return view('donations.my-donations', compact('donations'));
     }
     
-    // Update donation status
     public function updateStatus(Request $request, $id)
     {
-        // Find donation and ensure it belongs to current user
         $donation = Donation::where('id', $id)
             ->where('user_id', Auth::id())
             ->firstOrFail();
         
-        // Validate the new status
         $validated = $request->validate([
             'status' => 'required|in:pending,approved,picked_up,completed,cancelled'
         ]);
@@ -186,30 +158,25 @@ class DonationController extends Controller
         $newStatus = $validated['status'];
         $oldStatus = $donation->status;
         
-        // Define allowed status transitions to maintain data integrity
         $allowedTransitions = [
             'pending' => ['approved', 'picked_up', 'cancelled'],
             'approved' => ['picked_up', 'cancelled'],
             'picked_up' => ['completed'],
         ];
         
-        // Check if the transition is allowed
         if (isset($allowedTransitions[$oldStatus]) && !in_array($newStatus, $allowedTransitions[$oldStatus])) {
             return redirect()->back()
                 ->with('error', 'Status tidak dapat diubah dari ' . $oldStatus . ' ke ' . $newStatus);
         }
         
-        // Prevent changing status if already completed or cancelled
         if (in_array($oldStatus, ['completed', 'cancelled'])) {
             return redirect()->back()
                 ->with('error', 'Donasi yang sudah ' . $oldStatus . ' tidak dapat diubah.');
         }
         
-        // Update the status
         $donation->status = $newStatus;
         $donation->save();
         
-        // Prepare success messages
         $statusMessages = [
             'picked_up' => 'Donasi berhasil ditandai sudah diambil!',
             'completed' => 'Donasi berhasil dikonfirmasi selesai!',

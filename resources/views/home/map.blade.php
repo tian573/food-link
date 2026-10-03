@@ -66,9 +66,7 @@
             </div>
         </div>
 
-        <div id="foodBankList" class="space-y-3 mb-6">
-            <!-- Food bank items will be dynamically inserted here -->
-        </div>
+        <div id="foodBankList" class="space-y-3 mb-6"></div>
 
         <div class="grid grid-cols-2 gap-4 mb-6">
             <a href="/" class="bg-pink-200 text-gray-800 px-6 py-4 rounded-lg font-semibold text-center hover:bg-pink-300 transition">
@@ -156,8 +154,7 @@
                       Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
                       Math.sin(dLon/2) * Math.sin(dLon/2);
             const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-            const distance = R * c;
-            return distance;
+            return R * c;
         }
 
         function addFoodBankMarkers() {

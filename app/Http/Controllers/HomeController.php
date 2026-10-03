@@ -17,26 +17,18 @@ class HomeController extends Controller
         return view('home.map');
     }
     
-    public function form()
-    {
-        return view('home.form');
-    }
-    
     public function index()
     {
-        if(Auth::id()) 
-        {
-            $usertype = Auth()->user()->usertype;
+        if (Auth::check()) {
+            $usertype = Auth::user()->usertype;
 
-            if($usertype=='user')
-            {
+            if ($usertype === 'user') {
                 return redirect('/');
-            }
-            else if($usertype=='admin')
-            {
-                // Redirect to the admin dashboard route instead of returning a view
+            } elseif ($usertype === 'admin') {
                 return redirect()->route('admin.dashboard');
             }
         }
+
+        return redirect('/');
     }
 }
